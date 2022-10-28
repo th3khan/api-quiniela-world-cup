@@ -5,6 +5,7 @@ import "fmt"
 type Seeder interface {
 	All()
 	CreateRoles() error
+	CreateUsers() error
 }
 
 type Seed struct {
@@ -23,6 +24,12 @@ func (s *Seed) All() {
 			Name: "CreateRoles",
 			Run: func() error {
 				return s.CreateRoles()
+			},
+		},
+		Seed{
+			Name: "CreateUsers",
+			Run: func() error {
+				return s.CreateUsers()
 			},
 		},
 	}
