@@ -1,8 +1,6 @@
 package repositories
 
 import (
-	"errors"
-
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
 	"gorm.io/gorm"
 )
@@ -25,10 +23,6 @@ func NewRoleRepository(db *gorm.DB) roleRepository {
 
 func (repo *roleRepository) CreateRole(name string) (error, models.Role) {
 	var role models.Role
-
-	if len(name) <= 0 {
-		return errors.New("Name is required"), role
-	}
 
 	role.Name = name
 
