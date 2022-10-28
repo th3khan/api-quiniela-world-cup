@@ -7,6 +7,7 @@ import (
 
 type UserRepository interface {
 	CreateUser(name string, email string, roleId uint, password string, active bool) (error, models.User)
+	GetUserByEmail(email string) (error, models.User)
 }
 
 type userRepository struct {
@@ -33,4 +34,12 @@ func (repo *userRepository) CreateUser(name string, email string, roleId uint, p
 	result := repo.db.Create(&user)
 
 	return result.Error, user
+}
+
+func (repo *userRepository) GetUserByEmail(email string) models.User {
+	var user models.User
+
+	repo.db.Where("email = ?", email).Find(&user)
+
+	return user
 }
