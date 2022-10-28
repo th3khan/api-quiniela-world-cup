@@ -3,13 +3,13 @@ package seeders
 import (
 	"log"
 
+	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
 	"github.com/th3khan/api-quiniela-world-cup/app/services/user"
-	"github.com/th3khan/api-quiniela-world-cup/pkg/utils"
 )
 
 func (s *Seed) CreateUsers() error {
-	passwordDefault, err := utils.HashingPassword("123456")
+	passwordDefault, err := helpers.HashingPassword("123456")
 	if err != nil {
 		return err
 	}
