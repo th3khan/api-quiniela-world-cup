@@ -5,7 +5,7 @@ import (
 	"github.com/th3khan/api-quiniela-world-cup/app/controllers/auth"
 )
 
-func AuthRoutes(app *fiber.App) {
+func AuthRoutes(app fiber.Router) {
 	authGroup := app.Group("/auth")
 
 	authGroup.Post("/login", auth.Login)
