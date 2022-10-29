@@ -5,7 +5,7 @@ import (
 
 	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
-	"github.com/th3khan/api-quiniela-world-cup/app/services/user"
+	"github.com/th3khan/api-quiniela-world-cup/app/services/admin"
 )
 
 func (s *Seed) CreateUsers() error {
@@ -26,7 +26,7 @@ func (s *Seed) CreateUsers() error {
 	}
 
 	for _, u := range users {
-		if err, _ := user.CreateUser(
+		if err, _ := admin.CreateUser(
 			u.Name,
 			u.Email,
 			u.RoleId,
