@@ -8,6 +8,8 @@ import (
 type UserRepository interface {
 	CreateUser(name string, email string, roleId uint, password string, active bool) (error, models.User)
 	GetUserByEmail(email string) (error, models.User)
+	GetUsers(page int, perPage int) (error, []models.User)
+	GetTotalUsers() (error, int)
 }
 
 type userRepository struct {
@@ -42,4 +44,27 @@ func (repo *userRepository) GetUserByEmail(email string) models.User {
 	repo.db.Where("email = ?", email).Find(&user)
 
 	return user
+}
+
+func (repo *userRepository) GetUsers(page int, perPage int) []models.User {
+	var users []models.User
+
+	query := repo.db
+	if page > 0 {
+		query.Offset(page).Limit(perPage)
+	}
+
+	query.Find(&users)
+	return users
+}
+
+func (repo *userRepository) GetTotalUsers() int {
+	var total int
+	var users []models.User
+
+	repo.db.Find(&users)
+
+	total = len(users)
+
+	return total
 }

@@ -1,0 +1,4 @@
+package constants
+
+const PAGINATION_PAGE_DEFAULT = 1
+const PAGINATION_PER_PAGE_DEFAULT = 10
