@@ -7,4 +7,15 @@ type (
 		Users []entities.UserResponse
 		entities.Pagination
 	}
+
+	CreateUserRequest struct {
+		Name                 string `json:"name" validate:"required"`
+		Email                string `json:"email" validate:"required,email"`
+		Password             string `json:"password" validate:"required"`
+		PasswordConfirmation string `json:"password_confirmation" validate:"required,eqfield=Password"`
+		Active               bool   `json:"active" validate:"required"`
+		RoleId               uint   `json:"role_id" validate:"required"`
+		EmailVerified        bool   `json:"email_verified" validate:"required"`
+		Image                string `json:"image"`
+	}
 )
