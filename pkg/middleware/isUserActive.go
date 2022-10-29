@@ -2,17 +2,12 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
-	"github.com/th3khan/api-quiniela-world-cup/app/services/admin"
+	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 )
 
 func IsUserActive(c *fiber.Ctx) error {
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
 
-	email := claims["email"].(string)
-
-	err, userModel := admin.GetUserByEmail(email)
+	err, userModel := helpers.GetUserLogged(c)
 
 	if err != nil {
 		return err
