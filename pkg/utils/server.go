@@ -19,11 +19,15 @@ func CreateServer(port int) {
 	file := middleware.Logger(app)
 	defer file.Close()
 
+	app.Static("/", "./public")
+
+	api := app.Group("/api")
+
 	// routes
-	routes.AuthRoutes(app)
+	routes.AuthRoutes(api)
 
 	// routes admin
-	adminRoutes := app.Group("/admin")
+	adminRoutes := api.Group("/admin")
 	adminRoutes.Use(middleware.AuthorizationRequired())
 	adminRoutes.Use(middleware.IsUserActive)
 	adminRoutes.Use(middleware.IsSuperAdmin)
