@@ -9,18 +9,14 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
+	"github.com/th3khan/api-quiniela-world-cup/config"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/seeders"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/utils"
 	"github.com/th3khan/api-quiniela-world-cup/platform/migrations"
 )
 
 func main() {
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	config.InitJWT()
 
 	if !fiber.IsChild() {
 		migrations.Migrate()
@@ -48,7 +44,7 @@ func main() {
 		}
 	}
 
-	port, _ := strconv.Atoi(os.Getenv("APP_PORT"))
+	port, _ := strconv.Atoi(config.Config("APP_PORT"))
 
 	utils.CreateServer(port)
 }

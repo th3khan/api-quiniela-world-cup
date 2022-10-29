@@ -33,5 +33,4 @@ func Login(ctx *fiber.Ctx) error {
 	response.AccessToken = token
 
 	return ctx.JSON(response)
-
 }

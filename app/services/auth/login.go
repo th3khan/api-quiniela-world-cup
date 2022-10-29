@@ -3,8 +3,8 @@ package auth
 import (
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
