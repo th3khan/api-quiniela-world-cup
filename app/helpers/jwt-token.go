@@ -20,7 +20,7 @@ func GenerateToken(claims jwt.Claims) (string, error) {
 	return webtoken, nil
 }
 
-func GetUserLogged(c *fiber.Ctx) (error, *models.User) {
+func GetUserLogged(c *fiber.Ctx) (error, models.User) {
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
@@ -29,8 +29,8 @@ func GetUserLogged(c *fiber.Ctx) (error, *models.User) {
 	err, userModel := admin.GetUserByEmail(email)
 
 	if err != nil {
-		return err, &models.User{}
+		return err, models.User{}
 	}
 
-	return nil, &userModel
+	return nil, userModel
 }
