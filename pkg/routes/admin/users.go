@@ -9,4 +9,5 @@ func UserRoutes(adminRouter fiber.Router) {
 	userGroup := adminRouter.Group("/users")
 
 	userGroup.Get("/", users.GetUsers)
+	userGroup.Post("/", users.CreateUser)
 }
