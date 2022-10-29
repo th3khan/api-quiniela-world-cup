@@ -4,7 +4,7 @@ import "time"
 
 type Role struct {
 	ID        uint      `gorm:"primaryKey"`
-	Name      string    `gorm:"uniqueIndex;notNull"`
+	Name      string    `gorm:"uniqueIndex;notNull;size:200"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }
