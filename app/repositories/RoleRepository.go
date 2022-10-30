@@ -7,6 +7,7 @@ import (
 
 type RoleRepository interface {
 	CreateRole(name string) (error, models.Role)
+	GetRoleById(id int) (error, models.Role)
 }
 
 type roleRepository struct {
@@ -27,6 +28,14 @@ func (repo *roleRepository) CreateRole(name string) (error, models.Role) {
 	role.Name = name
 
 	result := repo.db.Create(&role)
+
+	return result.Error, role
+}
+
+func (repo *roleRepository) GetRoleById(id uint) (error, models.Role) {
+	var role models.Role
+
+	result := repo.db.Where("id = ?", id).Find(&role)
 
 	return result.Error, role
 }
