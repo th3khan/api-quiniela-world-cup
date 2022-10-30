@@ -32,6 +32,8 @@ func (s *Seed) CreateUsers() error {
 			u.RoleId,
 			u.Password,
 			u.Active,
+			"",
+			u.EmailVerified,
 		); err != nil {
 			log.Fatal(err)
 			return err
