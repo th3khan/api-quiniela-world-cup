@@ -41,3 +41,10 @@ func GetUserById(id int) models.User {
 
 	return userRepository.GetUserById(id)
 }
+
+func DeleteUserById(id int) error {
+	db := database.Connection()
+	userRepository := repositories.NewUserRespository(db)
+
+	return userRepository.DeleteUserById(id)
+}

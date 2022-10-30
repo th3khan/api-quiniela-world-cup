@@ -11,4 +11,5 @@ func UserRoutes(adminRouter fiber.Router) {
 	userGroup.Get("/", users.GetUsers)
 	userGroup.Post("/", users.CreateUser)
 	userGroup.Put("/:id", users.UpdateUser)
+	userGroup.Delete("/:id", users.DeleteUser)
 }

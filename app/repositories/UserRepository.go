@@ -14,6 +14,7 @@ type UserRepository interface {
 	GetUsers(page int, perPage int) (error, []models.User)
 	GetTotalUsers() (error, int)
 	SetEmailVerified(id int) error
+	DeleteUserById(id int) error
 }
 
 type userRepository struct {
@@ -119,5 +120,11 @@ func (repo *userRepository) UpdateUser(id int, name string, email string, roleId
 	}
 
 	result := repo.db.Model(&models.User{}).Where("id = ?", id).Updates(user)
+	return result.Error
+}
+
+func (repo *userRepository) DeleteUserById(id int) error {
+	result := repo.db.Delete(&models.User{}, id)
+
 	return result.Error
 }
