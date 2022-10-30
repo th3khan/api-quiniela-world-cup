@@ -2,6 +2,7 @@ package users
 
 import (
 	"image"
+	"strconv"
 
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
@@ -9,20 +10,27 @@ import (
 	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
+	"github.com/th3khan/api-quiniela-world-cup/app/services/admin"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
-	"github.com/th3khan/api-quiniela-world-cup/pkg/entities/admin"
+	adminrequest "github.com/th3khan/api-quiniela-world-cup/pkg/entities/admin"
 	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 )
 
-func CreateUser(ctx *fiber.Ctx) error {
-	var request admin.UserCreateRequest
+func UpdateUser(ctx *fiber.Ctx) error {
+	params := ctx.AllParams()
 
+	id, err := strconv.Atoi(params["id"])
+
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Id no valido")
+	}
+
+	var request adminrequest.UserUpdateRequest
 	if err := ctx.BodyParser(&request); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-
 	validate := validator.New()
-	err := validate.Struct(&request)
+	err = validate.Struct(&request)
 
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
@@ -40,6 +48,23 @@ func CreateUser(ctx *fiber.Ctx) error {
 		imageIsDefinedAndValid = true
 	}
 
+	user := admin.GetUserById(id)
+
+	if user.ID == 0 {
+		return fiber.NewError(fiber.StatusBadRequest, "Usuario no existe")
+	}
+
+	passwordChanged := false
+	var passwordHashed string
+
+	if len(request.Password) > 0 {
+		passwordChanged = true
+		passwordHashed, err = helpers.HashingPassword(request.Password)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+	}
+
 	db := database.Connection()
 	userRepository := repositories.NewUserRespository(db)
 	roleRepository := repositories.NewRoleRepository(db)
@@ -49,13 +74,8 @@ func CreateUser(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Rol no existe")
 	}
 
-	userByEmail := userRepository.GetUserByEmail(request.Email)
-
-	if userByEmail.ID > 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Usuario ya existe.")
-	}
-
 	var filenameImage string
+	var imageChanged bool
 	if imageIsDefinedAndValid {
 		filename := uuid.NewString()
 		filenameImage, err = helpers.SaveImageToDisk(image, filename, imageType, models.PATH_PROFILE_IMAGES)
@@ -63,15 +83,20 @@ func CreateUser(ctx *fiber.Ctx) error {
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, "No se pudo guardar la imagen del usuario")
 		}
-
+		imageChanged = true
 	}
 
-	passwordHashed, err := helpers.HashingPassword(request.Password)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	var setEmailVerifiedNow bool
+	if request.EmailVerified != user.EmailVerified {
+		if request.EmailVerified {
+			setEmailVerifiedNow = true
+		} else {
+			setEmailVerifiedNow = false
+		}
 	}
 
-	err, newUser := userRepository.CreateUser(
+	if err = userRepository.UpdateUser(
+		id,
 		request.Name,
 		request.Email,
 		request.RoleId,
@@ -79,13 +104,14 @@ func CreateUser(ctx *fiber.Ctx) error {
 		request.Active,
 		filenameImage,
 		request.EmailVerified,
-	)
-
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "No se pudo crear el usuario")
+		passwordChanged,
+		imageChanged,
+		setEmailVerifiedNow,
+	); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Error al intentar actualizar usuario")
 	}
 
-	newUser = userRepository.GetUserById(int(newUser.ID))
+	user = userRepository.GetUserById(id)
 
-	return ctx.Status(fiber.StatusCreated).JSON(entities.CreateUserResponse(&newUser))
+	return ctx.JSON(entities.CreateUserResponse(&user))
 }

@@ -35,6 +35,9 @@ func GetUserByEmail(email string) (error, models.User) {
 	return nil, user
 }
 
-func GetUsers(page int, perPage int) []models.User {
-	return []models.User{}
+func GetUserById(id int) models.User {
+	db := database.Connection()
+	userRepository := repositories.NewUserRespository(db)
+
+	return userRepository.GetUserById(id)
 }

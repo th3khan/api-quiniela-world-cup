@@ -59,7 +59,7 @@ func (repo *userRepository) GetUserByEmail(email string) models.User {
 	return user
 }
 
-func (repo *userRepository) GetUserById(id uint) models.User {
+func (repo *userRepository) GetUserById(id int) models.User {
 	var user models.User
 
 	repo.db.Preload("Role").Where("id = ?", id).Find(&user)
@@ -94,5 +94,30 @@ func (repo *userRepository) GetTotalUsers() int {
 func (repo *userRepository) SetEmailVerified(id uint) error {
 	var user models.User
 	result := repo.db.Model(&user).Where("id = ?", id).Updates(models.User{EmailVerified: true, EmailVerifiedAt: time.Now()})
+	return result.Error
+}
+
+func (repo *userRepository) UpdateUser(id int, name string, email string, roleId uint, password string, active bool, image string, emailVerified bool, changePasswod bool, changeImage bool, setEmailVerifiedNow bool) error {
+	var user models.User
+
+	user.Name = name
+	user.Email = email
+	user.RoleId = roleId
+	user.Active = active
+
+	if changePasswod {
+		user.Password = password
+	}
+
+	if changeImage {
+		user.Image = image
+	}
+
+	if setEmailVerifiedNow {
+		user.EmailVerified = emailVerified
+		user.EmailVerifiedAt = time.Now()
+	}
+
+	result := repo.db.Model(&models.User{}).Where("id = ?", id).Updates(user)
 	return result.Error
 }
