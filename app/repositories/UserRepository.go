@@ -70,12 +70,13 @@ func (repo *userRepository) GetUserById(id uint) models.User {
 func (repo *userRepository) GetUsers(page int, perPage int) []models.User {
 	var users []models.User
 
-	query := repo.db
+	query := repo.db.Model(&models.User{})
 	if page > 0 {
-		query.Offset(page).Limit(perPage)
+		offset := (page - 1) * perPage
+		query.Offset(offset).Limit(perPage)
 	}
 
-	query.Find(&users)
+	query.Preload("Role").Find(&users)
 	return users
 }
 
