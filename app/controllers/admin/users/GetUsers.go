@@ -30,7 +30,7 @@ func GetUsers(ctx *fiber.Ctx) error {
 		if len(perPageQuery) == 0 {
 			perPage = constants.PAGINATION_PER_PAGE_DEFAULT
 		} else {
-			perPage, err = strconv.Atoi(pageQuery)
+			perPage, err = strconv.Atoi(perPageQuery)
 			if err != nil {
 				return fiber.NewError(fiber.StatusBadRequest, "Parámetro {per_page} es inválido")
 			}
