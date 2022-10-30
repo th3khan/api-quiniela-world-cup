@@ -6,6 +6,8 @@ import (
 	"gorm.io/gorm"
 )
 
+const PATH_PROFILE_IMAGES = "/assets/images/profiles/"
+
 type User struct {
 	ID              uint   `gorm:"primary_key"`
 	RoleId          uint   `gorm:"index;notNull"`
