@@ -28,13 +28,22 @@ func NewUserRespository(db *gorm.DB) userRepository {
 	return repo
 }
 
-func (repo *userRepository) CreateUser(name string, email string, roleId uint, password string, active bool) (error, models.User) {
+func (repo *userRepository) CreateUser(name string, email string, roleId uint, password string, active bool, image string, emailVerified bool) (error, models.User) {
 	user := models.User{
 		RoleId:   roleId,
 		Name:     name,
 		Email:    email,
 		Password: password,
 		Active:   active,
+	}
+
+	if emailVerified {
+		user.EmailVerified = true
+		user.EmailVerifiedAt = time.Now()
+	}
+
+	if len(image) > 0 {
+		user.Image = image
 	}
 
 	result := repo.db.Create(&user)
