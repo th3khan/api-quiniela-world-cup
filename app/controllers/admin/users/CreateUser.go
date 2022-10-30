@@ -1,7 +1,10 @@
 package users
 
 import (
+	"bytes"
+	"html/template"
 	"image"
+	"os"
 
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
@@ -15,14 +18,15 @@ import (
 )
 
 func CreateUser(ctx *fiber.Ctx) error {
-	var request admin.UserCreateRequest
 
+	var request admin.UserCreateRequest
+	var err error
 	if err := ctx.BodyParser(&request); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
 	validate := validator.New()
-	err := validate.Struct(&request)
+	err = validate.Struct(&request)
 
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
@@ -86,6 +90,33 @@ func CreateUser(ctx *fiber.Ctx) error {
 	}
 
 	newUser = userRepository.GetUserById(int(newUser.ID))
+
+	// Send email to user with his credentials
+	mail := helpers.NewMailServer([]string{newUser.Email}, "Usuario registrado.")
+	t, err := template.ParseFiles("./public/templates/email/NewUserRegistered.html")
+
+	if err != nil {
+		fiber.NewError(fiber.StatusInternalServerError, "No se proceso el template para el email")
+	}
+
+	buf := new(bytes.Buffer)
+	if err = t.Execute(buf, struct {
+		Name     string
+		Password string
+		Link     string
+		Email    string
+	}{
+		Name:     newUser.Name,
+		Email:    newUser.Email,
+		Password: request.Password,
+		Link:     os.Getenv("URL_APP_FRONTEND"),
+	}); err != nil {
+		return err
+	}
+
+	mail.Body = buf.String()
+	go mail.Send()
+	go mail.SendCopyToAdmin()
 
 	return ctx.Status(fiber.StatusCreated).JSON(entities.CreateUserResponse(&newUser))
 }
