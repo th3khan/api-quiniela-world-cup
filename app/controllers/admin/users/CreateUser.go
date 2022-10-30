@@ -66,11 +66,16 @@ func CreateUser(ctx *fiber.Ctx) error {
 
 	}
 
+	passwordHashed, err := helpers.HashingPassword(request.Password)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
 	err, newUser := userRepository.CreateUser(
 		request.Name,
 		request.Email,
 		request.RoleId,
-		request.Password,
+		passwordHashed,
 		request.Active,
 		filenameImage,
 		request.EmailVerified,
@@ -79,6 +84,8 @@ func CreateUser(ctx *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "No se pudo crear el usuario")
 	}
+
+	newUser = userRepository.GetUserById(newUser.ID)
 
 	return ctx.Status(fiber.StatusCreated).JSON(entities.CreateUserResponse(&newUser))
 }
