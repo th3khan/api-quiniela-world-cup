@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"time"
+
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
 	"gorm.io/gorm"
 )
@@ -8,8 +10,10 @@ import (
 type UserRepository interface {
 	CreateUser(name string, email string, roleId uint, password string, active bool) (error, models.User)
 	GetUserByEmail(email string) (error, models.User)
+	GetUserById(id int) models.User
 	GetUsers(page int, perPage int) (error, []models.User)
 	GetTotalUsers() (error, int)
+	SetEmailVerified(id int) error
 }
 
 type userRepository struct {
@@ -46,6 +50,14 @@ func (repo *userRepository) GetUserByEmail(email string) models.User {
 	return user
 }
 
+func (repo *userRepository) GetUserById(id uint) models.User {
+	var user models.User
+
+	repo.db.Where("id = ?", id).Find(&user)
+
+	return user
+}
+
 func (repo *userRepository) GetUsers(page int, perPage int) []models.User {
 	var users []models.User
 
@@ -67,4 +79,10 @@ func (repo *userRepository) GetTotalUsers() int {
 	total = len(users)
 
 	return total
+}
+
+func (repo *userRepository) SetEmailVerified(id uint) error {
+	var user models.User
+	result := repo.db.Model(&user).Where("id = ?", id).Updates(models.User{EmailVerified: true, EmailVerifiedAt: time.Now()})
+	return result.Error
 }
