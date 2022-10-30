@@ -18,6 +18,8 @@ func CreateUser(name string, email string, roleId uint, password string, active 
 		roleId,
 		password,
 		active,
+		"",
+		false,
 	)
 }
 
