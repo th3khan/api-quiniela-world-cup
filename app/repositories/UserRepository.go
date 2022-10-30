@@ -62,7 +62,7 @@ func (repo *userRepository) GetUserByEmail(email string) models.User {
 func (repo *userRepository) GetUserById(id uint) models.User {
 	var user models.User
 
-	repo.db.Where("id = ?", id).Find(&user)
+	repo.db.Preload("Role").Where("id = ?", id).Find(&user)
 
 	return user
 }
