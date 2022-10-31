@@ -67,9 +67,15 @@ func (repo *groupRepository) GetGroupById(id int) models.Group {
 	return group
 }
 
-func (repo *groupRepository) GetGroupByName(name string) models.Group {
+func (repo *groupRepository) GetGroupByName(name string, excludeId int) models.Group {
 	var group models.Group
-	repo.db.Where("name = ?", strings.ToUpper(name)).Find(&group)
+	query := repo.db.Where("name = ?", strings.ToUpper(name))
+
+	if excludeId > 0 {
+		query.Where("id <> ?", excludeId)
+	}
+
+	query.Find(&group)
 	return group
 }
 

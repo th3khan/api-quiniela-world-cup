@@ -11,4 +11,5 @@ func GroupRoutes(adminRoute fiber.Router) {
 	groupRoutes.Get("/", groups.GetGroups)
 	groupRoutes.Get("/:id", groups.GetGroup)
 	groupRoutes.Post("/", groups.CreateGroup)
+	groupRoutes.Put("/:id", groups.UpdateGroup)
 }
