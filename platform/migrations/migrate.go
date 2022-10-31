@@ -9,5 +9,6 @@ func Migrate() {
 	database.Connection().AutoMigrate(
 		&models.Role{},
 		&models.User{},
+		&models.Group{},
 	)
 }
