@@ -1,7 +1,6 @@
 package groups
 
 import (
-	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
@@ -9,18 +8,9 @@ import (
 )
 
 func CreateGroup(ctx *fiber.Ctx) error {
-	var request entities.GroupRequest
-	var err error
-
-	if err := ctx.BodyParser(&request); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
-
-	validate := validator.New()
-	err = validate.Struct(&request)
-
+	err, request := ValidateRequest(ctx)
 	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		return err
 	}
 
 	db := database.Connection()

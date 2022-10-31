@@ -1,20 +1,15 @@
 package groups
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
 	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 )
 
 func DeleteGroup(ctx *fiber.Ctx) error {
-	params := ctx.AllParams()
-
-	id, err := strconv.Atoi(params["id"])
-
+	err, id := ValidateIdParam(ctx)
 	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Id no valido")
+		return err
 	}
 
 	db := database.Connection()
@@ -23,7 +18,7 @@ func DeleteGroup(ctx *fiber.Ctx) error {
 	group := repo.GetGroupById(id)
 
 	if group.ID == 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Grupo no existe")
+		return fiber.NewError(fiber.StatusNotFound, "Grupo no existe")
 	}
 
 	repo.DeleteGroupById(id)

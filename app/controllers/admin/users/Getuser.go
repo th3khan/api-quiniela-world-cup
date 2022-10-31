@@ -20,7 +20,7 @@ func GetUser(ctx *fiber.Ctx) error {
 	user := admin.GetUserById(id)
 
 	if user.ID == 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Usuario no existe")
+		return fiber.NewError(fiber.StatusNotFound, "Usuario no existe")
 	}
 
 	return ctx.JSON(entities.CreateUserResponse(&user))

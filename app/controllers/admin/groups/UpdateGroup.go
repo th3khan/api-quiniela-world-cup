@@ -1,9 +1,6 @@
 package groups
 
 import (
-	"strconv"
-
-	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
@@ -11,25 +8,16 @@ import (
 )
 
 func UpdateGroup(ctx *fiber.Ctx) error {
-	var request entities.GroupRequest
 	var err error
-	params := ctx.AllParams()
 
-	id, err := strconv.Atoi(params["id"])
-
+	err, id := ValidateIdParam(ctx)
 	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Id no valido")
+		return err
 	}
 
-	if err := ctx.BodyParser(&request); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
-
-	validate := validator.New()
-	err = validate.Struct(&request)
-
+	err, request := ValidateRequest(ctx)
 	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		return err
 	}
 
 	db := database.Connection()
@@ -38,7 +26,7 @@ func UpdateGroup(ctx *fiber.Ctx) error {
 	group := repo.GetGroupById(id)
 
 	if group.ID == 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Grupo no existe")
+		return fiber.NewError(fiber.StatusNotFound, "Grupo no existe")
 	}
 
 	groupByName := repo.GetGroupByName(request.Name, int(group.ID))
