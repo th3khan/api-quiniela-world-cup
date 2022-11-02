@@ -33,6 +33,7 @@ func CreateServer(port int) {
 	adminRoutes.Use(middleware.IsSuperAdmin)
 	admin.UserRoutes(adminRoutes)
 	admin.GroupRoutes(adminRoutes)
+	admin.TeamRoutes(adminRoutes)
 
 	log.Fatal(app.Listen(fmt.Sprintf(":%d", port)))
 }

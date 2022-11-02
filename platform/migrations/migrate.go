@@ -10,5 +10,6 @@ func Migrate() {
 		&models.Role{},
 		&models.User{},
 		&models.Group{},
+		&models.Team{},
 	)
 }
