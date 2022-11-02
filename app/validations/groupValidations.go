@@ -1,4 +1,4 @@
-package groups
+package validations
 
 import (
 	"strconv"
