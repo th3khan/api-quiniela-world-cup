@@ -9,6 +9,7 @@ type TeamRepository interface {
 	GetTeams(page int, perPage int) ([]models.Team, int)
 	GetTeam(id uint) models.Team
 	CreateTeam(name string, active bool, logo string) (error, models.Team)
+	UpdateTeam(id uint, name string, active bool, logo string) (error, models.Team)
 }
 
 type teamRepository struct {
@@ -24,7 +25,7 @@ func NewTeamRepository(db *gorm.DB) teamRepository {
 
 func (repo *teamRepository) GetTeam(id uint) models.Team {
 	var team models.Team
-	repo.db.Find(&team)
+	repo.db.Where("id = ?", id).Find(&team)
 	return team
 }
 
@@ -52,5 +53,15 @@ func (repo *teamRepository) CreateTeam(name string, active bool, logo string) (e
 	team.Active = active
 	team.Logo = logo
 	result := repo.db.Create(&team)
+	return result.Error, team
+}
+
+func (repo *teamRepository) UpdateTeam(id uint, name string, active bool, logo string) (error, models.Team) {
+	var team models.Team
+	team.ID = id
+	team.Name = name
+	team.Active = active
+	team.Logo = logo
+	result := repo.db.Where("id = ?", id).Updates(&team)
 	return result.Error, team
 }
