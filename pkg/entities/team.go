@@ -14,6 +14,7 @@ type (
 	}
 
 	TeamResponse struct {
+		ID uint `json:"id"`
 		TeamBase
 		CreatedAt time.Time `json:"created_at"`
 	}
@@ -27,6 +28,7 @@ type (
 func CreateTeamResponse(team models.Team) TeamResponse {
 	return TeamResponse{
 		CreatedAt: team.CreatedAt,
+		ID:        team.ID,
 		TeamBase: TeamBase{
 			Name:   team.Name,
 			Active: team.Active,

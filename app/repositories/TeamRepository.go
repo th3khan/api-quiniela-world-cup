@@ -7,6 +7,7 @@ import (
 
 type TeamRepository interface {
 	GetTeams(page int, perPage int) ([]models.Team, int)
+	CreateTeam(name string, active bool, logo string) (error, models.Team)
 }
 
 type teamRepository struct {
@@ -36,4 +37,13 @@ func (repo *teamRepository) GetAllTeams() []models.Team {
 	var teams []models.Team
 	repo.db.Find(&teams)
 	return teams
+}
+
+func (repo *teamRepository) CreateTeam(name string, active bool, logo string) (error, models.Team) {
+	var team models.Team
+	team.Name = name
+	team.Active = active
+	team.Logo = logo
+	result := repo.db.Create(&team)
+	return result.Error, team
 }

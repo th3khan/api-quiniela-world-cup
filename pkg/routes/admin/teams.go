@@ -11,7 +11,7 @@ func TeamRoutes(adminRoute fiber.Router) {
 
 	teamRoutes.Get("/", teams.GetTeams)
 	teamRoutes.Get("/:id", groups.GetGroup)
-	teamRoutes.Post("/", groups.CreateGroup)
+	teamRoutes.Post("/", teams.CreateTeam)
 	teamRoutes.Put("/:id", groups.UpdateGroup)
 	teamRoutes.Delete("/:id", groups.DeleteGroup)
 }
