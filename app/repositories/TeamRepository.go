@@ -2,11 +2,13 @@ package repositories
 
 import (
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
+	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 	"gorm.io/gorm"
 )
 
 type TeamRepository interface {
 	GetTeams(page int, perPage int) ([]models.Team, int)
+	GetTeam(id uint) models.Team
 	CreateTeam(name string, active bool, logo string) (error, models.Team)
 }
 
@@ -14,11 +16,18 @@ type teamRepository struct {
 	db *gorm.DB
 }
 
-func NewTeamRepository(db *gorm.DB) teamRepository {
+func NewTeamRepository() teamRepository {
+	db := database.Connection()
 	repo := teamRepository{
 		db: db,
 	}
 	return repo
+}
+
+func (repo *teamRepository) GetTeam(id uint) models.Team {
+	var team models.Team
+	repo.db.Find(&team)
+	return team
 }
 
 func (repo *teamRepository) GetTeams(page int, perPage int) ([]models.Team, int) {
