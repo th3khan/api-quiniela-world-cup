@@ -1,6 +1,8 @@
 package teams
 
 import (
+	"strconv"
+
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
@@ -18,4 +20,10 @@ func validateRequest(ctx *fiber.Ctx) (entities.TeamBase, error) {
 	}
 
 	return request, nil
+}
+
+func validateIdParam(ctx *fiber.Ctx) (int, error) {
+	params := ctx.AllParams()
+	id, err := strconv.Atoi(params["id"])
+	return id, err
 }
