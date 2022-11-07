@@ -9,6 +9,7 @@ import (
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
+	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 )
 
 func CreateTeam(ctx *fiber.Ctx) error {
@@ -33,7 +34,8 @@ func CreateTeam(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, "No se pudo guardar la imagen del equipo")
 	}
 
-	teamRepository := repositories.NewTeamRepository()
+	db := database.Connection()
+	teamRepository := repositories.NewTeamRepository(db)
 
 	err, team := teamRepository.CreateTeam(
 		request.Name,

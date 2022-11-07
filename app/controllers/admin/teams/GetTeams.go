@@ -7,6 +7,7 @@ import (
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/constants"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
+	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 )
 
 func GetTeams(ctx *fiber.Ctx) error {
@@ -34,7 +35,8 @@ func GetTeams(ctx *fiber.Ctx) error {
 		}
 	}
 
-	repo := repositories.NewTeamRepository()
+	db := database.Connection()
+	repo := repositories.NewTeamRepository(db)
 
 	teams, total := repo.GetTeams(page, perPage)
 

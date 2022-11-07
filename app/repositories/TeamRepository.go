@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"github.com/th3khan/api-quiniela-world-cup/app/models"
-	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 	"gorm.io/gorm"
 )
 
@@ -16,8 +15,7 @@ type teamRepository struct {
 	db *gorm.DB
 }
 
-func NewTeamRepository() teamRepository {
-	db := database.Connection()
+func NewTeamRepository(db *gorm.DB) teamRepository {
 	repo := teamRepository{
 		db: db,
 	}
