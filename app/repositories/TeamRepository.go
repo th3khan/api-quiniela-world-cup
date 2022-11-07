@@ -10,6 +10,7 @@ type TeamRepository interface {
 	GetTeam(id uint) models.Team
 	CreateTeam(name string, active bool, logo string) (error, models.Team)
 	UpdateTeam(id uint, name string, active bool, logo string) (error, models.Team)
+	DeleteTeam(id uint) error
 }
 
 type teamRepository struct {
@@ -64,4 +65,9 @@ func (repo *teamRepository) UpdateTeam(id uint, name string, active bool, logo s
 	team.Logo = logo
 	result := repo.db.Where("id = ?", id).Updates(&team)
 	return result.Error, team
+}
+
+func (repo *teamRepository) DeleteTeam(id uint) error {
+	result := repo.db.Delete(&models.Team{}, id)
+	return result.Error
 }
