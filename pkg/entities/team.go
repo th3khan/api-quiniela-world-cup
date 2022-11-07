@@ -45,6 +45,7 @@ func CreateTeamResponseWithpagination(teams []models.Team, page int, perPage int
 	}
 
 	return TeamResponseWithPagination{
+		Teams: teamsResponse,
 		Pagination: Pagination{
 			Page:    page,
 			PerPage: perPage,
