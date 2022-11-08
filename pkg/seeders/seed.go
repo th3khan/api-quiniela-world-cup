@@ -32,6 +32,12 @@ func (s *Seed) All() {
 				return s.CreateUsers()
 			},
 		},
+		Seed{
+			Name: "CreatePhases",
+			Run: func() error {
+				return s.CreatePhases()
+			},
+		},
 	}
 
 	for _, seed := range seeders {
