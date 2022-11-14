@@ -11,9 +11,9 @@ type (
 	UserBaseRequest struct {
 		Name          string `json:"name" validate:"required"`
 		Email         string `json:"email" validate:"required,email"`
-		Active        bool   `json:"active" validate:"required"`
+		Active        bool   `json:"active"`
 		RoleId        uint   `json:"role_id" validate:"required"`
-		EmailVerified bool   `json:"email_verified" validate:"required"`
+		EmailVerified bool   `json:"email_verified"`
 		Image         string `json:"image"`
 	}
 

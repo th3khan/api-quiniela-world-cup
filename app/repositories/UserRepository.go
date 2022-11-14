@@ -99,12 +99,12 @@ func (repo *userRepository) SetEmailVerified(id uint) error {
 }
 
 func (repo *userRepository) UpdateUser(id int, name string, email string, roleId uint, password string, active bool, image string, emailVerified bool, changePasswod bool, changeImage bool, setEmailVerifiedNow bool) error {
-	var user models.User
-
-	user.Name = name
-	user.Email = email
-	user.RoleId = roleId
-	user.Active = active
+	user := &models.User{
+		Name:   name,
+		Email:  email,
+		Active: active,
+		RoleId: roleId,
+	}
 
 	if changePasswod {
 		user.Password = password
@@ -119,7 +119,13 @@ func (repo *userRepository) UpdateUser(id int, name string, email string, roleId
 		user.EmailVerifiedAt = time.Now()
 	}
 
-	result := repo.db.Model(&models.User{}).Where("id = ?", id).Updates(user)
+	repo.db.Where("id = ?", id).Model(&models.User{}).Updates(
+		map[string]interface{}{
+			"active":         user.Active,
+			"Email_verified": user.EmailVerified,
+		},
+	)
+	result := repo.db.Where("id = ?", id).Updates(user)
 	return result.Error
 }
 

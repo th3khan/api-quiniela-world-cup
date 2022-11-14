@@ -40,15 +40,15 @@ func UpdateUser(ctx *fiber.Ctx) error {
 	var imageType string
 	imageIsDefinedAndValid := false
 
-	if len(request.Image) > 0 {
+	user := admin.GetUserById(id)
+
+	if len(request.Image) > 0 && user.Image != request.Image {
 		image, imageType, err = helpers.ValidateImage(request.Image)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		imageIsDefinedAndValid = true
 	}
-
-	user := admin.GetUserById(id)
 
 	if user.ID == 0 {
 		return fiber.NewError(fiber.StatusBadRequest, "Usuario no existe")
