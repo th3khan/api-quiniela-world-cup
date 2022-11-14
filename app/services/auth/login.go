@@ -18,7 +18,7 @@ func Login(email string, password string) (error, string, *models.User) {
 	user := repo.GetUserByEmail(email)
 
 	if user.ID == 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Usuario no encontrado."), "", &models.User{}
+		return fiber.NewError(fiber.StatusBadRequest, "Credenciales invalidas."), "", &models.User{}
 	}
 
 	if !helpers.CheckPasswordHash(password, user.Password) {

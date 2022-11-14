@@ -11,7 +11,8 @@ type (
 	}
 
 	LoginResponse struct {
-		User UserResponse
+		User UserResponse `json:"user"`
 		TokenResponse
+		Error bool `json:"error"`
 	}
 )

@@ -10,6 +10,7 @@ type (
 		RoleId uint         `json:"role_id"`
 		Role   RoleResponse `json:"role"`
 		Image  string       `json:"image"`
+		Points float32      `json:"points"`
 	}
 )
 
@@ -21,5 +22,6 @@ func CreateUserResponse(userModel *models.User) UserResponse {
 		RoleId: userModel.RoleId,
 		Role:   CreateRoleResponse(&userModel.Role),
 		Image:  userModel.Image,
+		Points: userModel.Points,
 	}
 }
