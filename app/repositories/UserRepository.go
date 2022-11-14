@@ -55,7 +55,7 @@ func (repo *userRepository) CreateUser(name string, email string, roleId uint, p
 func (repo *userRepository) GetUserByEmail(email string) models.User {
 	var user models.User
 
-	repo.db.Where("email = ?", email).Find(&user)
+	repo.db.Where("email = ?", email).Preload("Role").Find(&user)
 
 	return user
 }
