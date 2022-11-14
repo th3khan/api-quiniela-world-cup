@@ -115,7 +115,7 @@ func CreateUser(ctx *fiber.Ctx) error {
 	}
 
 	mail.Body = buf.String()
-	go mail.Send()
+	mail.Send()
 	go mail.SendCopyToAdmin()
 
 	return ctx.Status(fiber.StatusCreated).JSON(entities.CreateUserResponse(&newUser))
