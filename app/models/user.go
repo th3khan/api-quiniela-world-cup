@@ -17,7 +17,7 @@ type User struct {
 	Password        string  `gorm:"notNull;size:256"`
 	EmailVerified   bool    `gorm:"default:false;notNull"`
 	Active          bool    `gorm:"default:false;notNull"`
-	Image           string  `gorm:"size:256; default:/assets/images/profiles/default.png"`
+	Image           string  `gorm:"size:256; default:/assets/images/profiles/default.jpg"`
 	Points          float32 `gorm:"default:0"`
 	EmailVerifiedAt time.Time
 	CreatedAt       time.Time `gorm:"autoCreateTime"`
