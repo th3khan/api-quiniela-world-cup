@@ -12,5 +12,6 @@ func Migrate() {
 		&models.Group{},
 		&models.Team{},
 		&models.Phase{},
+		&models.Payment{},
 	)
 }
