@@ -1,14 +1,16 @@
 package groups
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
-	"github.com/th3khan/api-quiniela-world-cup/app/validations"
 	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 )
 
 func DeleteGroup(ctx *fiber.Ctx) error {
-	err, id := validations.ValidateIdParam(ctx)
+	id, err := strconv.Atoi(helpers.GetParamFromRequest(ctx, "id"))
 	if err != nil {
 		return err
 	}

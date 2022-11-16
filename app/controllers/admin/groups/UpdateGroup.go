@@ -1,9 +1,11 @@
 package groups
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
-	"github.com/th3khan/api-quiniela-world-cup/app/validations"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
 	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 )
@@ -11,12 +13,13 @@ import (
 func UpdateGroup(ctx *fiber.Ctx) error {
 	var err error
 
-	err, id := validations.ValidateIdParam(ctx)
+	id, err := strconv.Atoi(helpers.GetParamFromRequest(ctx, "id"))
 	if err != nil {
 		return err
 	}
 
-	err, request := validations.ValidateRequest(ctx)
+	var request entities.GroupRequest
+	err = helpers.ValidateRequest(ctx, &request)
 	if err != nil {
 		return err
 	}

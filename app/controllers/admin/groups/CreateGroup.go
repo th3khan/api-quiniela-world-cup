@@ -2,14 +2,15 @@ package groups
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/th3khan/api-quiniela-world-cup/app/helpers"
 	"github.com/th3khan/api-quiniela-world-cup/app/repositories"
-	"github.com/th3khan/api-quiniela-world-cup/app/validations"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/entities"
 	"github.com/th3khan/api-quiniela-world-cup/platform/database"
 )
 
 func CreateGroup(ctx *fiber.Ctx) error {
-	err, request := validations.ValidateRequest(ctx)
+	var request entities.GroupRequest
+	err := helpers.ValidateRequest(ctx, &request)
 	if err != nil {
 		return err
 	}
