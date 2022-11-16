@@ -21,6 +21,10 @@ func Login(email string, password string) (error, string, *models.User) {
 		return fiber.NewError(fiber.StatusBadRequest, "Credenciales invalidas."), "", &models.User{}
 	}
 
+	if !user.Active {
+		return fiber.NewError(fiber.StatusUnauthorized, "Usuario Inactivo"), "", &models.User{}
+	}
+
 	if !helpers.CheckPasswordHash(password, user.Password) {
 		return fiber.NewError(fiber.StatusUnauthorized, "Credenciales invalidas"), "", &models.User{}
 	}
