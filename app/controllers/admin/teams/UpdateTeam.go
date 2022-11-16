@@ -2,6 +2,7 @@ package teams
 
 import (
 	"image"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -13,12 +14,13 @@ import (
 )
 
 func UpdateTeam(ctx *fiber.Ctx) error {
-	id, err := validateIdParam(ctx)
+	id, err := strconv.Atoi(helpers.GetParamFromRequest(ctx, "id"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "ID no válido.")
 	}
 
-	request, err := validateRequest(ctx)
+	var request entities.TeamBase
+	err = helpers.ValidateRequest(ctx, &request)
 
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())

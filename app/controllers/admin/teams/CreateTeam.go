@@ -13,7 +13,8 @@ import (
 )
 
 func CreateTeam(ctx *fiber.Ctx) error {
-	request, err := validateRequest(ctx)
+	var request entities.TeamBase
+	err := helpers.ValidateRequest(ctx, &request)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
