@@ -9,6 +9,7 @@ import (
 	"github.com/th3khan/api-quiniela-world-cup/pkg/middleware"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/routes"
 	"github.com/th3khan/api-quiniela-world-cup/pkg/routes/admin"
+	"github.com/th3khan/api-quiniela-world-cup/pkg/routes/user"
 	"github.com/th3khan/api-quiniela-world-cup/platform/migrations/server"
 )
 
@@ -31,11 +32,14 @@ func CreateServer(port int) {
 
 	// routes
 	routes.AuthRoutes(api)
+	api.Use(middleware.AuthorizationRequired())
+	api.Use(middleware.IsUserActive)
 
-	// routes admin
+	// User app routes.
+	user.UserPaymentRoutes(api)
+
+	// Super admin rooutes
 	adminRoutes := api.Group("/admin")
-	adminRoutes.Use(middleware.AuthorizationRequired())
-	adminRoutes.Use(middleware.IsUserActive)
 	adminRoutes.Use(middleware.IsSuperAdmin)
 	admin.UserRoutes(adminRoutes)
 	admin.GroupRoutes(adminRoutes)
